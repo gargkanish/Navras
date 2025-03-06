@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Navras</title>
+  <!-- Including both fonts from your files -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,700|Pacifico&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* Use the gradient background from music.html */
+      --bg-gradient: linear-gradient(135deg, #1a0a1a 0%, #3d0f3d 100%);
+      /* Use music.html’s vibrant palette */
+      --primary-color: #ff69f5;
+      --secondary-color: #ffa3f5;
+      --accent-color: #ff4d88;
+      --text-color: #ffffff;
+      --glass-bg: rgba(255, 255, 255, 0.1);
+      --shadow-color: rgba(0, 0, 0, 0.4);
+      --sidebar-width: 280px;
+      --player-height: 100px;
+      --transition-speed: 0.3s;
+      --glass-filter: blur(12px);
+      --neon-glow: 0 0 30px rgba(255, 105, 245, 0.4);
+      --card-bg: rgba(255, 255, 255, 0.1);
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-color);
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    /* Particle Background */
+    .particle-field {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    /* Layout Grid */
+    .grid-container {
+      display: grid;
+      grid-template-areas:
+        "sidebar main"
+        "player player";
+      grid-template-columns: var(--sidebar-width) 1fr;
+      grid-template-rows: 1fr var(--player-height);
+      height: 100%;
+    }
+    /* Sidebar Navigation */
+    aside.sidebar {
+      grid-area: sidebar;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 25px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    aside.sidebar .logo {
+      font-family: 'Pacifico', cursive;
+      font-size: 28px;
+      color: var(--primary-color);
+      text-align: center;
+    }
+    aside.sidebar nav ul {
+      list-style: none;
+    }
+    aside.sidebar nav ul li {
+      margin: 10px 0;
+    }
+    aside.sidebar nav ul li a {
+      color: var(--text-color);
+      text-decoration: none;
+      padding: 12px 15px;
+      display: block;
+      border-radius: 8px;
+      transition: background var(--transition-speed);
+    }
+    aside.sidebar nav ul li a:hover,
+    aside.sidebar nav ul li.active a {
+      background: rgba(255,255,255,0.2);
+    }
+    /* Main Content Area */
+    main.main {
+      grid-area: main;
+      overflow-y: auto;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    .hero {
+      position: relative;
+      height: 300px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 8px 8px 16px var(--shadow-color);
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://via.placeholder.com/1200x300.png?text=Full+Fledged+Music+Site') center/cover no-repeat;
+      filter: brightness(0.75);
+    }
+    .hero h1 {
+      position: relative;
+      text-align: center;
+      padding-top: 100px;
+      font-size: 3rem;
+    }
+    .search-bar {
+      display: flex;
+      justify-content: center;
+    }
+    .search-bar input {
+      width: 80%;
+      padding: 12px 20px;
+      border-radius: 50px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+    section {
+      margin-bottom: 40px;
+    }
+    section h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--secondary-color);
+      padding-bottom: 5px;
+    }
+    .track-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .track-card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 4px 4px 10px var(--shadow-color);
+      cursor: pointer;
+      transition: transform var(--transition-speed);
+    }
+    .track-card:hover {
+      transform: scale(1.05);
+    }
+    .track-card img {
+      width: 18%;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      
+    }
+    /* Contact Form kanish made it */
+    .contact-form {
+      background: var(--card-bg);
+      padding: 18px;
+      border-radius: 15px;
+      max-width: 200px;
+      max-height: 300px;
+      margin: 0 auto;
+      box-shadow: 4px 4px 10px var(--shadow-color);
+    }
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+    }
+    .contact-form button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary-color);
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background var(--transition-speed);
+    }
+    .contact-form button:hover {
+      background: var(--secondary-color);
+    }
+    /* Audio Player Footer */
+    footer.audio-player {
+      grid-area: player;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 10px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(0,0,0,0.1);
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.1);
+    }
+    footer.audio-player .track-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    footer.audio-player .track-info img {
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+    footer.audio-player .controls button {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      margin: 0 5px;
+      color: var(--text-color);
+    }
+    footer.audio-player .progress-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 300px;
+    }
+    footer.audio-player .progress-bar {
+      flex: 1;
+      height: 8px;
+      background: #ddd;
+      border-radius: 4px;
+      position: relative;
+      cursor: pointer;
+    }
+    footer.audio-player .progress {
+      height: 100%;
+      background: var(--primary-color);
+      width: 0%;
+      border-radius: 4px;
+    }
+    footer.audio-player .extra-controls input[type="range"] {
+      width: 100px;
+    }
+    /* Visualizer Overlay */
+    .visualizer-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .visualizer-overlay canvas {
+      width: 80%;
+      max-width: 800px;
+      height: 300px;
+      border-radius: 10px;
+    }
+    .visualizer-overlay .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--primary-color);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 24px;
+      color: #090006;
+      cursor: pointer;
+    }
+    /* Custom Scrollbars */
+    aside.sidebar, main.main {
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary-color) transparent;
+    }
+    aside.sidebar::-webkit-scrollbar, main.main::-webkit-scrollbar {
+      width: 8px;
+    }
+    aside.sidebar::-webkit-scrollbar-track, main.main::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    aside.sidebar::-webkit-scrollbar-thumb, main.main::-webkit-scrollbar-thumb {
+      background-color: var(--primary-color);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Particle Background Canvas -->
+  <canvas class="particle-field" id="particleCanvas"></canvas>
+  <div class="grid-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="logo">Navras </div>
+      <nav>
+        <ul>
+          <li class="active"><a href="#featured">🏠 Home</a></li>
+          <li><a href="#focus">🎯 Focus</a></li>
+          <li><a href="#sleep">🌙 Sleep</a></li>
+          <li><a href="#meditation">🕉 Meditation</a></li>
+          <li><a href="#contact">📩 Contact</a></li>
+        </ul>
+      </nav>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main">
+      <!-- Hero Section -->
+      <div class="hero">
+        <h1>Elevate Your Mind with Music</h1>
+      </div>
+      <!-- Search Bar -->
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search tracks, artists...">
+      </div>
+      <!-- Track Sections -->
+      <section id="featured">
+        <h2>Featured</h2>
+        <div class="track-grid" id="featuredTracks"></div>
+      </section>
+      <section id="focus">
+        <h2>Focus</h2>
+        <div class="track-grid" id="focusTracks"></div>
+      </section>
+      <section id="sleep">
+        <h2>Sleep</h2>
+        <div class="track-grid" id="sleepTracks"></div>
+      </section>
+      <section id="meditation">
+        <h2>Meditation</h2>
+        <div class="track-grid" id="meditationTracks"></div>
+      </section>
+      <section id="contact">
+        <h2>Contact Us</h2>
+        <div class="contact-form">
+          <h3>Get in Touch</h3>
+          <input type="text" placeholder="Your Name">
+          <input type="email" placeholder="Your Email">
+          <textarea rows="4" placeholder="Your Message"></textarea>
+          <button type="submit">Send Message</button>
+        </div>
+      </section>
+    </main>
+    
+    <!-- Audio Player Footer -->
+    <footer class="audio-player">
+      <div class="track-info">
+        <img id="playerCover" src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000da84218777d9e1acffa88b57a265" alt="Track Cover">
+        <div>
+          <div id="currentTrackTitle">Select a Track</div>
+          <div id="currentTrackArtist">Full Music Site</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button id="prevBtn">⏮️</button>
+        <button id="playPauseBtn">▶️</button>
+        <button id="nextBtn">⏭️</button>
+      </div>
+      <div class="progress-container">
+        <span id="currentTime">0:00</span>
+        <div class="progress-bar" id="progressBar">
+          <div class="progress" id="progress"></div>
+        </div>
+        <span id="duration">0:00</span>
+      </div>
+      <div class="extra-controls">
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
+        <button id="visualizerBtn"></button>
+      </div>
+    </footer>
+  </div>
+  
+  <!-- Visualizer Overlay -->
+  <div class="visualizer-overlay" id="visualizerOverlay">
+    <button class="close-btn" id="closeVisualizer">✕</button>
+    <canvas id="visualizerCanvas"></canvas>
+  </div>
+  
+  <script>
+    // ---------------------------
+    // Particle System (from music.html)
+    // ---------------------------
+    class ParticleSystem {
+      constructor() {
+        this.canvas = document.getElementById('particleCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.init();
+      }
+      init() {
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+        for(let i = 0; i < 800; i++) {
+          this.particles.push({
+            x: Math.random() * this.canvas.width,
+            y: Math.random() * this.canvas.height,
+            size: Math.random() * 3 + 1,
+            speed: Math.random() * 0.5 + 0.1
+          });
+        }
+        this.animate();
+      }
+      animate() {
+        this.ctx.fillStyle = 'rgba(10, 10, 26, 0.05)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.particles.forEach(p => {
+          p.y += p.speed;
+          if(p.y > this.canvas.height) p.y = 0;
+          this.ctx.beginPath();
+          this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          this.ctx.fillStyle = `rgba(255, 105, 245, ${p.size/3})`;
+          this.ctx.fill();
+        });
+        requestAnimationFrame(() => this.animate());
+      }
+      resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+      }
+    }
+    new ParticleSystem();
+    
+    // ---------------------------
+    // Track Data (update URLs as needed)
+    // ---------------------------
+    const trackData = {
+    featured: [
+        { title: "Gamma Focus", artist: "40Hz Binaural", cover: "https://i.scdn.co/image/ab67616d0000b273e3e286773d577b80a78da7e4", audio: "Copy of 01) binaural 1hz Deepest Meditation.mp3", duration: "1:00:00" }
+    ],
+    focus: [
+        { title: "Laser Concentration", artist: "Beta Waves", cover:"https://image-cdn-fa.spotifycdn.com/image/ab67706c0000da84215a68be723e671e71b4764b", audio:"100-binaurale-beats-pur-delta-waves-3-hz-100-ohne-musik-200251.mp3", duration: "45:00" }
+    ],
+    sleep: [
+        { title: "Deep Sleep", artist: "Delta Waves", cover: "https://i.scdn.co/image/ab67616d00004851726f08bc781347c77beef95c", audio: "100-binaurale-beats-pur-theta-waves-4-hz-100-ohne-musik-175107.mp3", duration: "8:00" }
+    ],
+    meditation: [
+        { title: "Zen Meditation", artist: "Calm Waves", cover: "https://i.scdn.co/image/ab6761610000e5ebf9b191701695f4295e2fe289", audio: "Copy of 01) binaural 1hz Deepest Meditation.mp3", duration: "30:00" }
+    ]
+};
+
+    
+    
+    // Render Track Cards
+    function renderTracks() {
+      Object.keys(trackData).forEach(category => {
+        const container = document.getElementById(category + "Tracks");
+        trackData[category].forEach((track, index) => {
+          const card = document.createElement("div");
+          card.className = "track-card";
+          card.innerHTML = `
+            <img src="${track.cover}" alt="${track.title}">
+            <h3>${track.title}</h3>
+            <p>${track.artist}</p>
+            <p>${track.duration}</p>
+          `;
+          card.addEventListener("click", () => playTrack(category, index));
+          container.appendChild(card);
+        });
+      });
+    }
+    renderTracks();
+    
+    // ---------------------------
+    // Audio Player Logic
+    // ---------------------------
+    const audio = new Audio();
+    let currentCategory = "";
+    let currentTrackIndex = 0;
+    let isPlaying = false;
+    
+    const currentTrackTitle = document.getElementById("currentTrackTitle");
+    const currentTrackArtist = document.getElementById("currentTrackArtist");
+    const playerCover = document.getElementById("playerCover");
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const currentTimeDisplay = document.getElementById("currentTime");
+    const durationDisplay = document.getElementById("duration");
+    const progressBar = document.getElementById("progressBar");
+    const progress = document.getElementById("progress");
+    const volumeSlider = document.getElementById("volumeSlider");
+    
+    function playTrack(category, index) {
+      currentCategory = category;
+      currentTrackIndex = index;
+      const track = trackData[category][index];
+      audio.src = track.audio;
+      audio.play();
+      isPlaying = true;
+      playPauseBtn.textContent = "⏸️";
+      currentTrackTitle.textContent = track.title;
+      currentTrackArtist.textContent = track.artist;
+      playerCover.src = track.cover;
+    }
+    
+    playPauseBtn.addEventListener("click", () => {
+      if (!audio.src) return;
+      if (isPlaying) {
+        audio.pause();
+        playPauseBtn.textContent = "▶️";
+      } else {
+        audio.play();
+        playPauseBtn.textContent = "⏸️";
+      }
+      isPlaying = !isPlaying;
+    });
+    
+    prevBtn.addEventListener("click", () => {
+      if (!currentCategory) return;
+      currentTrackIndex = (currentTrackIndex - 1 + trackData[currentCategory].length) % trackData[currentCategory].length;
+      playTrack(currentCategory, currentTrackIndex);
+    });
+    
+    nextBtn.addEventListener("click", () => {
+      if (!currentCategory) return;
+      currentTrackIndex = (currentTrackIndex + 1) % trackData[currentCategory].length;
+      playTrack(currentCategory, currentTrackIndex);
+    });
+    
+    audio.addEventListener("timeupdate", () => {
+      if (audio.duration) {
+        const progressPercent = (audio.currentTime / audio.duration) * 100;
+        progress.style.width = progressPercent + "%";
+        const curr = Math.floor(audio.currentTime);
+        const min = Math.floor(curr / 60);
+        const sec = curr % 60;
+        currentTimeDisplay.textContent = min + ":" + (sec < 10 ? "0" + sec : sec);
+      }
+    });
+    
+    audio.addEventListener("loadedmetadata", () => {
+      const dur = Math.floor(audio.duration);
+      const min = Math.floor(dur / 60);
+      const sec = dur % 60;
+      durationDisplay.textContent = min + ":" + (sec < 10 ? "0" + sec : sec);
+    });
+    
+    progressBar.addEventListener("click", (e) => {
+      const rect = progressBar.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
+      const clickPercent = clickX / width;
+      audio.currentTime = clickPercent * audio.duration;
+    });
+    
+    volumeSlider.addEventListener("input", (e) => {
+      audio.volume = e.target.value;
+    });
+    
+    // ---------------------------
+    // Search Functionality
+    // ---------------------------
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("input", () => {
+      const query = searchInput.value.toLowerCase();
+      document.querySelectorAll(".track-card").forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(query) ? "block" : "none";
+      });
+    });
+    
+    // ---------------------------
+    // Visualizer Functionality
+    // ---------------------------
+    const visualizerBtn = document.getElementById("visualizerBtn");
+    const visualizerOverlay = document.getElementById("visualizerOverlay");
+    const closeVisualizer = document.getElementById("closeVisualizer");
+    const canvas = document.getElementById("visualizerCanvas");
+    const ctx = canvas.getContext("2d");
+    let audioCtx, analyser, dataArray, bufferLength, source;
+    
+    function setupVisualizer() {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 256;
+      bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
+      if (source) source.disconnect();
+      source = audioCtx.createMediaElementSource(audio);
+      source.connect(analyser);
+      analyser.connect(audioCtx.destination);
+      canvas.width = 800;
+      canvas.height = 300;
+      drawVisualizer();
+    }
+    
+    function drawVisualizer() {
+      requestAnimationFrame(drawVisualizer);
+      analyser.getByteFrequencyData(dataArray);
+      ctx.fillStyle = "rgba(26, 10, 26, 0.5)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const barWidth = (canvas.width / bufferLength) * 2.5;
+      let x = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = dataArray[i];
+        ctx.fillStyle = "var(--secondary-color)";
+        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        x += barWidth + 1;
+      }
+    }
+    
+    visualizerBtn.addEventListener("click", () => {
+      visualizerOverlay.style.display = "flex";
+      setupVisualizer();
+    });
+    
+    closeVisualizer.addEventListener("click", () => {
+      visualizerOverlay.style.display = "none";
+    });
+    
+    // ---------------------------
+    // Smooth Navigation for Sidebar Links
+    // ---------------------------
+    document.querySelectorAll("aside.sidebar nav ul li a").forEach(link => {
+      link.addEventListener("click", function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute("href")).scrollIntoView({ behavior: "smooth" });
+        document.querySelectorAll("aside.sidebar nav ul li").forEach(li => li.classList.remove("active"));
+        this.parentElement.classList.add("active");
+      });
+    });
+  </script>
+</body>
+</html>
